@@ -1,68 +1,66 @@
 # SERP Monitor
+Автоматичний аналіз SERP для 350+ ключових слів. Запускається щопонеділка, без жодної ручної роботи.
+Автор — [Назар Носаненко](https://www.linkedin.com/in/nazar-nosanenko-308639163/)), SEO Team Lead у Stripo.email.
 
-Automated SERP analysis for 350+ keywords. Runs every Monday, zero manual work.
+## Що робить
 
-Built by [Nazar Nosanenko](https://www.linkedin.com/in/YOUR_LINKEDIN/) — SEO Team Lead at Stripo.email.
+- Збирає топ-10 результатів Google для кожного ключового слова через SerpAPI
+- Класифікує кожен URL: YouTube / Reddit / Social / Own / Article
+- Відправляє патерн до Claude (Anthropic API) → отримує стратегічну рекомендацію по кожному кластеру
+- Щотижня записує все в новий таб Google Sheets
 
-## What it does
+## Стек
 
-- Fetches top-10 Google results for every keyword via SerpAPI
-- Classifies each URL: YouTube / Reddit / Social / Own / Article
-- Sends the pattern to Claude (Anthropic API) → gets a strategic recommendation per cluster
-- Writes everything to a new Google Sheets tab every week
-
-## Stack
-
-| Tool | Role |
+| Інструмент | Роль |
 |------|------|
-| SerpAPI | SERP data |
-| Anthropic API (Claude Haiku) | Cluster analysis |
-| GitHub Actions | Weekly scheduler |
-| Google Sheets | Output |
+| SerpAPI | Дані з SERP |
+| Anthropic API (Claude Haiku) | Аналіз кластерів |
+| GitHub Actions | Щотижневий запуск |
+| Google Sheets | Результати |
 
-**Infrastructure cost: $0**
+**Вартість інфраструктури: $0**
 
-## Setup
+## Налаштування
 
-### 1. Clone the repo
+### 1. Клонуй репо
 ```bash
 git clone https://github.com/YOUR_USERNAME/serp-monitor.git
 ```
 
-### 2. Prepare keywords.csv
-Two columns: `keyword` and `cluster`
-
+### 2. Підготуй keywords.csv
+Два стовпці: `keyword` і `cluster`
+```
 keyword,cluster
 email template builder,Email Builders
 drag and drop email editor,Email Builders
+```
 
+### 3. Налаштуй Google Sheets
+- Створи новий Google Sheet
+- Створи Service Account у Google Cloud Console
+- Поділися таблицею з email Service Account (роль — Редактор)
+- Завантаж JSON Service Account
 
-### 3. Set up Google Sheets
-- Create a new Google Sheet
-- Create a Service Account in Google Cloud Console
-- Share the sheet with the Service Account email (Editor role)
-- Download the Service Account JSON
+### 4. Додай GitHub Secrets
+Перейди в **Settings → Secrets → Actions** і додай:
 
-### 4. Add GitHub Secrets
-Go to **Settings → Secrets → Actions** and add:
-
-| Secret | Value |
+| Secret | Значення |
 |--------|-------|
-| `SERPAPI_KEY` | Your SerpAPI key |
-| `ANTHROPIC_KEY` | Your Anthropic API key |
-| `GOOGLE_SERVICE_ACCOUNT_JSON` | Full JSON content of Service Account |
-| `GOOGLE_SHEET_ID` | ID from the Google Sheet URL |
-| `YOUR_DOMAIN` | Your domain, e.g. `example.com` |
+| `SERPAPI_KEY` | Твій ключ SerpAPI |
+| `ANTHROPIC_KEY` | Твій ключ Anthropic API |
+| `GOOGLE_SERVICE_ACCOUNT_JSON` | Повний вміст JSON Service Account |
+| `GOOGLE_SHEET_ID` | ID таблиці з URL Google Sheet |
+| `YOUR_DOMAIN` | Твій домен, наприклад `example.com` |
 
-### 5. Run
-Triggers automatically every Monday at 07:00 UTC.
-Or run manually: **Actions → Weekly SERP Analysis → Run workflow**
+### 5. Запуск
+Автоматично щопонеділка о 07:00 UTC.
+Або вручну: **Actions → Weekly SERP Analysis → Run workflow**
 
-## Output
+## Результат
 
-Each week creates a new sheet tab `SERP-2026-W21` with:
-- All top-10 URLs per keyword with type classification
-- AI-generated strategic summary per cluster
+Щотижня створюється новий таб `SERP-2026-W21` з:
+- Усіма топ-10 URL по кожному ключу з класифікацією типу
+- AI-рекомендацією по кожному кластеру від Claude
 
-## License
+## Ліцензія
 MIT
