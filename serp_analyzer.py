@@ -111,9 +111,18 @@ def write_to_sheets(token: str, sheet_name: str, rows: list):
     url     = f"https://sheets.googleapis.com/v4/spreadsheets/{SHEET_ID}"
     headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
 
+    # Створити аркуш якщо не існує
     requests.post(f"{url}:batchUpdate", headers=headers, json={
         "requests": [{"addSheet": {"properties": {"title": sheet_name}}}]
     })
+
+    # Очистити аркуш перед записом
+    requests.post(
+        f"{url}/values/{sheet_name}!A1:Z10000:clear",
+        headers=headers
+    )
+
+    # Записати нові дані
     requests.put(
         f"{url}/values/{sheet_name}!A1?valueInputOption=RAW",
         headers=headers,
