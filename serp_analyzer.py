@@ -101,10 +101,10 @@ Return 3 lines:
         },
     )
     resp_json = resp.json()
-if "content" not in resp_json:
-    print(f"Anthropic API error: {resp_json}")
-    return "Analysis unavailable"
-return resp_json["content"][0]["text"]
+    if "content" not in resp_json:
+        print(f"Anthropic API error: {resp_json}")
+        return "Analysis unavailable"
+    return resp_json["content"][0]["text"]
 
 
 def write_to_sheets(token: str, sheet_name: str, rows: list):
